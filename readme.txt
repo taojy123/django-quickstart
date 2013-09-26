@@ -1,4 +1,5 @@
 DJANGO QUICKSTART
+=====================
 
 在 Django 1.4 的基础上快速建立项目文件，当然是最基本的，不过比django-admin.py的startproject指令更好用。
 
