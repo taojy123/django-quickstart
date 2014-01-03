@@ -264,6 +264,12 @@ framework.
 
 """
 import os
+import sys
+
+path = os.path.dirname(__file__)
+path = path.replace(r"\%s","").replace(r"/%s","")
+os.chdir(path)
+sys.path.append(path)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "%s.settings")
 
@@ -276,7 +282,7 @@ application = get_wsgi_application()
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
-''' % (pname, pname)
+''' % (pname, pname, pname, pname)
 open(pname + "/wsgi.py", "w").write(outstr)
 
 
