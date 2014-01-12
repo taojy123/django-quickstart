@@ -1,5 +1,6 @@
 import os
 import sys
+import uuid
 
 if len(sys.argv) < 2:
     pname = raw_input("The project name:")
@@ -168,7 +169,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'mc8iwu&amp;l9l**d-qcu5)l02woe^7@44t#(&amp;2p85bw)+mrp#y6zn' + str(uuid.uuid4())
+SECRET_KEY = 'mc8iwu&amp;l9l**d-qcu5)l02woe^7@44t#(&amp;2p85bw)+mrp#y6zn-%s'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -241,7 +242,7 @@ LOGGING = {
         },
     }
 }
-""" % (pname, pname, pname, pname)
+""" % (pname, str(uuid.uuid4()),pname, pname, pname)
 open(pname + "/settings.py", "w").write(outstr)
 
 
