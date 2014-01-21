@@ -268,9 +268,10 @@ import os
 import sys
 
 path = os.path.dirname(__file__)
-path = path.replace(r"\%s","").replace(r"/%s","")
+path = path.replace(r"\%s", "", 1).replace(r"/%s", "", 1)
 os.chdir(path)
 sys.path.append(path)
+print os.getcwd()
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "%s.settings")
 
