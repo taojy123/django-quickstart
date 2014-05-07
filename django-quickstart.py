@@ -268,7 +268,7 @@ import os
 import sys
 
 path = os.path.dirname(__file__)
-path = path.replace(r"\%s", "", 1).replace(r"/%s", "", 1)
+path = os.path.join(path, "..")
 os.chdir(path)  # using pyinstaller to comment it
 sys.path.append(path)
 print os.getcwd()
