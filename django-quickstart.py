@@ -284,7 +284,7 @@ application = get_wsgi_application()
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
-''' % (pname, pname, pname, pname)
+''' % (pname, pname)
 open(pname + "/wsgi.py", "w").write(outstr)
 
 
