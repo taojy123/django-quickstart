@@ -13,8 +13,8 @@ if not os.path.exists(os.path.join(os.getcwd(), pname)):
 
 
 #create views
-outstr = """
-# -*- coding: utf-8 -*-
+outstr = """# -*- coding: utf-8 -*-
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
@@ -43,8 +43,8 @@ open(pname + "/views.py", "w").write(outstr)
 
 
 #create models
-outstr = """
-# -*- coding: utf-8 -*-
+outstr = """# -*- coding: utf-8 -*-
+
 from django.db import models
 class Info(models.Model):
     uid = models.CharField(max_length=64, blank=True , null=True)
@@ -269,7 +269,7 @@ import sys
 
 path = os.path.dirname(__file__)
 path = os.path.join(path, "..")
-os.chdir(path)  # using pyinstaller to comment it
+#os.chdir(path)  # using web server for deploy to uncomment it
 sys.path.append(path)
 print os.getcwd()
 
@@ -297,8 +297,8 @@ open("1.cmd", "w").write("cmd")
 
 
 #modify manage
-outstr = """
-#!/usr/bin/env python
+outstr = """#!/usr/bin/env python
+
 import os
 import sys
 
@@ -314,8 +314,8 @@ open("manage.py", "w").write(outstr)
 
 
 #creat run
-outstr ="""
-#!/usr/bin/env python
+outstr ="""#!/usr/bin/env python
+
 import os
 import sys
 import webbrowser
@@ -437,7 +437,6 @@ if not os.path.exists(os.path.join(os.getcwd(), 'static', 'js')):
     os.makedirs(os.path.join(os.getcwd(), 'static', 'js'))
 if not os.path.exists(os.path.join(os.getcwd(), 'static', 'css')):
     os.makedirs(os.path.join(os.getcwd(), 'static', 'css'))
-
 
 
 print "Finish!"
