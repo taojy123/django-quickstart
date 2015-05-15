@@ -349,6 +349,7 @@ import django.contrib.sessions
 import django.contrib.sites
 import django.contrib.admin
 
+import django.contrib.sessions.serializers
 import django.db.models.sql.compiler
 from django.contrib.auth.backends import *
 from django.conf.urls.defaults import *
