@@ -428,6 +428,10 @@ from django.conf import settings
 from django.utils import translation
 import django.contrib.staticfiles.urls
 
+import Cookie
+import htmlentitydefs
+import HTMLParser
+
 if __name__ == "__main__":
     if len(sys.argv)==1:
         sys.argv.append("runserver")
