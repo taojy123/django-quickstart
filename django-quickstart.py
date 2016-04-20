@@ -335,31 +335,31 @@ outstr ="""#!/usr/bin/env python
 import os
 import sys
 import webbrowser
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "%s.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ims.settings")
 #these pertain to your application
-import %s.wsgi
-import %s.urls
-import %s.settings
-import %s.models
-import %s.views
+import ims.wsgi
+import ims.urls
+import ims.settings
+import ims.models
+import ims.views
 
+import django.contrib.sessions.serializers
 import django.contrib.auth
 import django.contrib.contenttypes
 import django.contrib.sessions
 import django.contrib.sites
 import django.contrib.admin
 
-import django.contrib.sessions.serializers
 import django.db.models.sql.compiler
 from django.contrib.auth.backends import *
-from django.conf.urls.defaults import *
+# from django.conf.urls.defaults import *
 #these are django imports
 import django.template.loaders.filesystem
 import django.template.loaders.app_directories
 import django.middleware.common
 import django.contrib.sessions.middleware
 import django.contrib.auth.middleware
-import django.middleware.doc
+# import django.middleware.doc
 import django.contrib.messages
 import django.contrib.staticfiles
 import django.contrib.messages.middleware
@@ -377,8 +377,8 @@ import django.contrib.auth.models
 import django.contrib.contenttypes.models
 import django.contrib.sessions.models
 import django.contrib.sites.models
-import django.contrib.messages.models
-import django.contrib.staticfiles.models
+# import django.contrib.messages.models
+# import django.contrib.staticfiles.models
 import django.contrib.admin.models
 import django.template.defaulttags
 import django.template.defaultfilters
@@ -412,18 +412,18 @@ import django.core.context_processors
 import django.template.defaulttags
 import django.template.defaultfilters
 import django.template.loader_tags
-from django.conf.urls.defaults import *
+# from django.conf.urls.defaults import *
 import django.contrib.admin.views.main
 import django.core.context_processors
 import django.contrib.auth.views
 import django.contrib.auth.backends
 import django.views.static
 import django.contrib.admin.templatetags.log
-import django.contrib.admin.templatetags.adminmedia
-import django.conf.urls.shortcut
+# import django.contrib.admin.templatetags.adminmedia
+# import django.conf.urls.shortcut
 import django.views.defaults
 from django.core.handlers.wsgi import WSGIHandler
-from django.core.servers.basehttp import AdminMediaHandler
+# from django.core.servers.basehttp import AdminMediaHandler
 from django.conf import settings
 from django.utils import translation
 import django.contrib.staticfiles.urls
@@ -441,6 +441,7 @@ if __name__ == "__main__":
     print sys.argv
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
+
 """ % (pname, pname, pname, pname, pname, pname)
 open("run.py", "w").write(outstr)
 
