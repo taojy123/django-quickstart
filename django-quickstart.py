@@ -335,13 +335,13 @@ outstr ="""#!/usr/bin/env python
 import os
 import sys
 import webbrowser
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ims.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "%s.settings")
 #these pertain to your application
-import ims.wsgi
-import ims.urls
-import ims.settings
-import ims.models
-import ims.views
+import %s.wsgi
+import %s.urls
+import %s.settings
+import %s.models
+import %s.views
 
 import django.contrib.sessions.serializers
 import django.contrib.auth
