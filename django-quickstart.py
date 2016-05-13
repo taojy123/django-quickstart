@@ -75,6 +75,15 @@ urlpatterns = patterns('',
 # This will work if DEBUG is True
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns += staticfiles_urlpatterns()
+
+# This will work if DEBUG is True or False
+# from django.conf import settings
+# from django.views.static import serve
+# import re
+# urlpatterns.append(url(
+#     '^' + re.escape(settings.STATIC_URL.lstrip('/')) + '(?P<path>.*)$',
+#     serve,
+#     {'document_root': './static/'}))
 """
 open(pname + "/urls.py", "w").write(outstr)
 
