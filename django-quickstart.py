@@ -14,77 +14,241 @@ if not os.path.exists(os.path.join(os.getcwd(), pname)):
 
 #create views
 outstr = """# -*- coding: utf-8 -*-
+import StringIO
 
+import BeautifulSoup
+import xlwt
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from models import *
-import os
-import uuid
+
+
 def index(request):
     return render_to_response('index.html', locals())
-#====================login=============================================
+
+@login_required
+def reminders(request):
+    reminders = Reminder.objects.all().order_by('-id')
+    return render_to_response('reminders.html', locals())
+
+
+@login_required
+def reminder(request, reminder_id):
+
+    if reminder_id == 'add':
+        reminder = Reminder()
+    else:
+        reminder = get_object_or_404(Reminder, id=reminder_id)
+
+    is_new = not reminder.id
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        method = request.POST.get('method')
+        ahead_hours = request.POST.get('ahead_hours')
+        enable = request.POST.get('enable', False)
+
+        reminder.name = name
+        reminder.method = method
+        reminder.ahead_hours = ahead_hours
+        reminder.enable = enable
+        reminder.save()
+
+        return HttpResponseRedirect('/reminders/')
+
+    return render_to_response('reminder.html', locals())
+
+
+@login_required
+def reminder_delete(request, reminder_id):
+    Reminder.objects.filter(id=reminder_id).delete()
+    return HttpResponseRedirect('/reminders/')
+
+
 def login(request):
-    username = request.REQUEST.get('username', '')
-    password = request.REQUEST.get('password', '')
-    user = auth.authenticate(username=username, password=password)
-    if user is not None and user.is_active:
-        auth.login(request, user)
-    return HttpResponseRedirect("/admin/")
+    msg = ''
+    next_url = request.GET.get('next', '/')
+    if request.method == 'POST':
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        next_url = request.POST.get('next', '/')
+        user = auth.authenticate(username=username, password=password)
+        print username, password
+        if user is not None and user.is_active:
+            auth.login(request, user)
+            return HttpResponseRedirect(next_url)
+        else:
+            msg = u'用户名或密码错误'
+    return render_to_response('login.html', locals())
+
 
 def logout(request):
     if request.user.is_authenticated():
         auth.logout(request)
-    return HttpResponseRedirect("/admin/")
-#======================================================================
+    return HttpResponseRedirect("/")
+
+
+@login_required
+def password(request):
+    error_msg = ''
+    if request.method == 'POST':
+        password = request.POST.get('password', '')
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+        user = request.user
+
+        if not user.check_password(password):
+            error_msg = u'原密码错误'
+
+        if password1 != password2:
+            error_msg = u'两次密码不相符'
+
+        if not error_msg:
+            user.set_password(password1)
+            user.save()
+            return HttpResponseRedirect('/login/')
+
+    return render_to_response('password.html', locals())
+
+
+def output(request):
+    data = request.POST.get('data')
+    begin_index = int(request.POST.get('begin_index', 0))
+    end_index = int(request.POST.get('end_index', -1))
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('output')
+
+    soup = BeautifulSoup.BeautifulSoup(data)
+
+    thead_soup = soup.find('thead')
+    th_soups = thead_soup.findAll('th')
+    th_soups = th_soups[begin_index:end_index]
+
+    j = 0
+    for th_soup in th_soups:
+        th = th_soup.getText()
+        ws.write(0, j, th)
+        j += 1
+
+    tbody_soup = soup.find('tbody')
+    tr_soups = tbody_soup.findAll('tr')
+
+    i = 1
+    for tr_soup in tr_soups:
+        td_soups = tr_soup.findAll('td')
+        td_soups = td_soups[begin_index:end_index]
+
+        j = 0
+        for td_soup in td_soups:
+            td = td_soup.getText()
+            ws.write(i, j, td)
+            j += 1
+
+        i += 1
+
+    s = StringIO.StringIO()
+    wb.save(s)
+    s.seek(0)
+    data = s.read()
+    response = HttpResponse(data)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="output.xls"'
+
+    return response
 """
 open(pname + "/views.py", "w").write(outstr)
 
 
 #create models
 outstr = """# -*- coding: utf-8 -*-
-
 from django.db import models
-class Info(models.Model):
-    uid = models.CharField(max_length=64, blank=True , null=True)
-    key = models.CharField(max_length=64, blank=True , null=True)
-    value = models.CharField(max_length=255, blank=True , null=True)
+
+
+class Reminder(models.Model):
+
+    METHOD_CHOICES = (
+        (1, 'Email'),
+        (2, 'SMS'),
+    )
+    name = models.CharField(max_length=255, blank=True)
+    method = models.IntegerField(choices=METHOD_CHOICES, default=1)
+    ahead_hours = models.IntegerField(default=24)
+    enable = models.BooleanField(default=True)
+    update_time = models.DateTimeField(auto_now=True)
+    create_time = models.DateTimeField(default=timezone.now)
 """
 open(pname + "/models.py", "w").write(outstr)
 
 
-#modify urls
+#create admin
 outstr = """
-from django.conf.urls import patterns, include, url
+from django.contrib import admin
+from django.contrib.auth.models import Group
+from django.contrib.sites.models import Site
+
+from models import *
+
+
+@admin.register(Reminder)
+class ReminderAdmin(admin.ModelAdmin):
+    list_display = ['id', '__str__']
+
+
+admin.site.unregister(Group)
+admin.site.unregister(Site)
+"""
+open(pname + "/admin.py", "w").write(outstr)
+
+
+#modify urls
+outstr = '''
+"""URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/1.9/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.conf.urls import url, include
+    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
+"""
+
+from django.conf.urls import url, include
+from django.contrib import admin
+
 from views import *
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'xxx.views.home', name='home'),
-    # url(r'^xxx/', include('xxx.foo.urls')),
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
-    ('^$', index),
-    ('^index/$', index),
-)
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+
+    url(r'^$', index),
+    url(r'^index/$', index),
+
+]
+
+
 # This will work if DEBUG is True
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-urlpatterns += staticfiles_urlpatterns()
+# from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+# urlpatterns += staticfiles_urlpatterns()
 
 # This will work if DEBUG is True or False
-# from django.conf import settings
-# from django.views.static import serve
-# import re
-# urlpatterns.append(url(
-#     '^' + re.escape(settings.STATIC_URL.lstrip('/')) + '(?P<path>.*)$',
-#     serve,
-#     {'document_root': './static/'}))
-"""
+from django.conf import settings
+from django.views.static import serve
+import re
+urlpatterns.append(url(
+    '^' + re.escape(settings.STATIC_URL.lstrip('/')) + '(?P<path>.*)$',
+    serve,
+    {'document_root': './static/'}))
+'''
 open(pname + "/urls.py", "w").write(outstr)
 
 
@@ -96,8 +260,10 @@ outstr = """
 import os
 import uuid
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 LOGIN_URL = '/login/'
 
@@ -134,58 +300,39 @@ else:
         }
     }
 
-# Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# although not all choices may be available on all operating systems.
-# On Unix systems, a value of None will cause Django to use the same
-# timezone as the operating system.
-# If running in a Windows environment this must be set to the same as your
-# system time zone.
-TIME_ZONE = 'Asia/Shanghai'
-
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
-
 SITE_ID = 1
 
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
+# Internationalization
+# https://docs.djangoproject.com/en/1.9/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'Asia/Shanghai'
+
 USE_I18N = True
 
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale.
 USE_L10N = True
 
-# If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = False
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+STATIC_URL = '/static/'
+
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = './static/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/static/media/'
 
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
-
-# URL prefix for static files.
-# Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
-
-# Additional locations of static files
-STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    os.path.join(os.getcwd(), 'static').replace('\\\\','/').decode("gbk"),
-)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -196,14 +343,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'mc8iwu&amp;l9l**d-qcu5)l02woe^7@44t#(&amp;2p85bw)+mrp#y6zn-%s'
-
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-)
+SECRET_KEY = 'django-quickstart-%s'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -220,12 +360,21 @@ ROOT_URLCONF = '%s.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = '%s.wsgi.application'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    os.path.join(os.getcwd(), 'templates').replace('\\\\','/').decode("gbk"),
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -234,10 +383,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admin',
     '%s',
 )
 
