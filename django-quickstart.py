@@ -81,7 +81,7 @@ def login(request):
             auth.login(request, user)
             return HttpResponseRedirect(next_url)
         else:
-            msg = u'用户名或密码错误'
+            msg = u'username or password error'
     return render_to_response('login.html', locals())
 
 
@@ -101,10 +101,10 @@ def password(request):
         user = request.user
 
         if not user.check_password(password):
-            error_msg = u'原密码错误'
+            error_msg = u'old password error'
 
         if password1 != password2:
-            error_msg = u'两次密码不相符'
+            error_msg = u'two passwords not the same'
 
         if not error_msg:
             user.set_password(password1)
