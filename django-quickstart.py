@@ -166,6 +166,7 @@ open(pname + "/views.py", "w").write(outstr)
 #create models
 outstr = """# -*- coding: utf-8 -*-
 from django.db import models
+from django.utils import timezone
 
 
 class Reminder(models.Model):
