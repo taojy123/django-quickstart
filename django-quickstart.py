@@ -93,7 +93,7 @@ def logout(request):
 
 @login_required
 def password(request):
-    error_msg = ''
+    msg = ''
     if request.method == 'POST':
         password = request.POST.get('password', '')
         password1 = request.POST.get('password1', '')
@@ -101,12 +101,12 @@ def password(request):
         user = request.user
 
         if not user.check_password(password):
-            error_msg = u'old password error'
+            msg = u'old password error'
 
         if password1 != password2:
-            error_msg = u'two passwords not the same'
+            msg = u'two passwords not the same'
 
-        if not error_msg:
+        if not msg:
             user.set_password(password1)
             user.save()
             return HttpResponseRedirect('/login/')

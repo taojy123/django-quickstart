@@ -4,9 +4,9 @@
 {% block content %}
     <h2 class="sub-header">登录</h2>
 
-    {% if error_msg %}
+    {% if msg %}
         <div class="alert alert-danger">
-            {{ error_msg }}
+            {{ msg }}
         </div>
     {% endif %}
 
@@ -16,12 +16,12 @@
 
         <div class="form-group">
             <label  class="col-sm-2 control-label" >用户名:</label>
-            <input type="text" class="form-control"  style="display:inline;width:auto;" name="username" >
+            <input type="text" class="form-control" name="username" >
         </div>
 
         <div class="form-group">
             <label  class="col-sm-2 control-label" >密码:</label>
-            <input type="password" class="form-control"  style="display:inline;width:auto;" name="password" >
+            <input type="password" class="form-control" name="password" >
         </div>
 
         <div class="form-group">
