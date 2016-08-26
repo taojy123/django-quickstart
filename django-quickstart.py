@@ -234,6 +234,13 @@ urlpatterns = [
     url(r'^$', index),
     url(r'^index/$', index),
 
+    url(r'^reminders/$', reminders),
+    url(r'^reminders/(\d+|add)/$', reminder),
+    url(r'^reminders/(\d+)/delete/$', reminder_delete),
+    
+    url(r'^login/$', login),
+    url(r'^logout/$', logout),
+    url(r'^password/$', password),
 ]
 
 
