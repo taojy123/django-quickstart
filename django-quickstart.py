@@ -626,6 +626,26 @@ if not os.path.exists(os.path.join(os.getcwd(), 'static', 'css')):
     os.makedirs(os.path.join(os.getcwd(), 'static', 'css'))
 
 
+
+#modify manage
+outstr = """[uwsgi]
+chdir=./
+wsgi-file=./%s/wsgi.py
+master=True
+processes=2
+threads=2
+http-socket=0.0.0.0:8000
+stats=0.0.0.0:18000
+daemonize=/var/log/uwsgi/%s.log
+pidfile=/tmp/%s.pid
+#virtualenv=/root/envdj16
+#socket=127.0.0.1:8000
+#http=0.0.0.0:8000
+""" % (pname, pname, pname)
+open("uwsgi.ini", "w").write(outstr)
+
+
+
 print "Finish!"
 
 raw_input("Press any key to exit...")
