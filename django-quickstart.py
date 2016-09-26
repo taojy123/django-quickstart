@@ -642,7 +642,7 @@ pidfile=/tmp/%s.pid
 #socket=127.0.0.1:8000
 #http=0.0.0.0:8000
 """ % (pname, pname, pname)
-open("uwsgi.ini", "w").write(outstr)
+open("uwsgi_%s.ini" % pname, "w").write(outstr)
 
 
 
