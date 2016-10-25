@@ -264,6 +264,7 @@ open(pname + "/urls.py", "w").write(outstr)
 
 #modify settings
 outstr = """
+# coding=utf-8
 # Django settings for %s project.
 import os
 import uuid
@@ -313,15 +314,27 @@ SITE_ID = 1
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh_Hans'
 
 TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
+
+
+# USE_L10N must be False, below will work
+TIME_FORMAT = 'Y-m-d'
+DATETIME_FORMAT = 'Y-m-d H:i'
+# DATE_FORMAT = 'j E Y г.'
+# TIME_FORMAT = 'G:i'
+# DATETIME_FORMAT = 'j E Y г. G:i'
+# YEAR_MONTH_FORMAT = 'F Y г.'
+# MONTH_DAY_FORMAT = 'j F'
+# SHORT_DATE_FORMAT = 'd.m.Y'
+# SHORT_DATETIME_FORMAT = 'd.m.Y H:i'
 
 
 # Static files (CSS, JavaScript, Images)
