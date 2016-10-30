@@ -314,7 +314,7 @@ SITE_ID = 1
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'zh_Hans'
+LANGUAGE_CODE = 'zh-Hans'
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -648,9 +648,9 @@ master=True
 processes=2
 threads=2
 http-socket=0.0.0.0:8000
-stats=0.0.0.0:18000
 daemonize=/var/log/uwsgi/%s.log
 pidfile=/tmp/%s.pid
+#stats=0.0.0.0:18000
 #virtualenv=/root/envdj16
 #socket=127.0.0.1:8000
 #http=0.0.0.0:8000
