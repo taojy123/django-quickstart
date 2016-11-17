@@ -1,3 +1,5 @@
+#coding=utf8
+
 import os
 import sys
 import uuid
@@ -328,7 +330,7 @@ USE_TZ = True
 # USE_L10N must be False, below will work
 TIME_FORMAT = 'Y-m-d'
 DATETIME_FORMAT = 'Y-m-d H:i'
-# DATE_FORMAT = 'j E Y г.'
+# DATE_FORMAT = 'j E Y r.'
 # TIME_FORMAT = 'G:i'
 # DATETIME_FORMAT = 'j E Y г. G:i'
 # YEAR_MONTH_FORMAT = 'F Y г.'
