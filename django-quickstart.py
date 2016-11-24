@@ -201,7 +201,6 @@ from models import *
 
 def find_model_index(name):
     count = 0
-    print admin.site._registry
     for model, model_admin in admin.site._registry.items():
         if capfirst(model._meta.verbose_name_plural) == name:
             return count
