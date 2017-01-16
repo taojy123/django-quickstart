@@ -307,6 +307,8 @@ DEBUG = True
 
 LOGIN_URL = '/login/'
 
+ALLOWED_HOSTS = ['*']
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
