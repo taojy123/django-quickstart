@@ -359,7 +359,7 @@ USE_TZ = True
 
 
 # USE_L10N must be False, below will work
-TIME_FORMAT = 'Y-m-d'
+DATE_FORMAT = 'Y-m-d'
 DATETIME_FORMAT = 'Y-m-d H:i'
 # DATE_FORMAT = 'j E Y r.'
 # TIME_FORMAT = 'G:i'
