@@ -16,10 +16,12 @@ if not os.path.exists(os.path.join(os.getcwd(), pname)):
 
 #create views
 outstr = """# -*- coding: utf-8 -*-
-import StringIO
 
+import StringIO
+import HTMLParser
 import BeautifulSoup
 import xlwt
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -119,7 +121,9 @@ def password(request):
 def output(request):
     data = request.POST.get('data')
     begin_index = int(request.POST.get('begin_index', 0))
-    end_index = int(request.POST.get('end_index', -1))
+    end_index = int(request.POST.get('end_index', 999))
+
+    html_parser = HTMLParser.HTMLParser()
 
     wb = xlwt.Workbook()
     ws = wb.add_sheet('output')
@@ -127,12 +131,13 @@ def output(request):
     soup = BeautifulSoup.BeautifulSoup(data)
 
     thead_soup = soup.find('thead')
-    th_soups = thead_soup.findAll('th')
+    th_soups = thead_soup.findAll(['th', 'td'])
     th_soups = th_soups[begin_index:end_index]
 
     j = 0
     for th_soup in th_soups:
         th = th_soup.getText()
+        th = html_parser.unescape(th).strip()
         ws.write(0, j, th)
         j += 1
 
@@ -141,12 +146,13 @@ def output(request):
 
     i = 1
     for tr_soup in tr_soups:
-        td_soups = tr_soup.findAll('td')
+        td_soups = tr_soup.findAll(['td', 'th'])
         td_soups = td_soups[begin_index:end_index]
 
         j = 0
         for td_soup in td_soups:
             td = td_soup.getText()
+            td = html_parser.unescape(td).strip()
             ws.write(i, j, td)
             j += 1
 
@@ -223,6 +229,7 @@ registry.update(admin.site._registry)
 admin.site._registry = registry
 admin.site.index = index_decorator(admin.site.index)
 admin.site.app_index = index_decorator(admin.site.app_index)
+admin.site.site_header = 'XXX'
 
 admin.site.unregister(Group)
 admin.site.unregister(Site)
