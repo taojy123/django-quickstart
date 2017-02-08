@@ -38,6 +38,8 @@ templates 为页面模版文件夹，里面预置了一个index.html模版。
 
 static 为静态文件目录，包含有css、images、js 三个子目录，用户存放项目的静态文件。
 
+本项目内含 templates 和 static 这两个目录，可在生成 django 项目后覆盖到其中。
+
 manage.py 为django自带的管理工具脚本。
 
 run.py 是由 manage.py 修改的，运行 run.py 可实现用django测试服务器直接在8000端口部署项目并打开首页。这对于要将项目编译为exe的用户来说有一定的帮助。

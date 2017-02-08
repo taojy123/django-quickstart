@@ -476,6 +476,15 @@ LOGGING = {
         },
     }
 }
+
+
+SERVER_EMAIL = 'watchmen123456@163.com'
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'watchmen123456'
+EMAIL_HOST_PASSWORD = 'wm123456'
+
+
 """ % (pname, str(uuid.uuid4()),pname, pname, pname)
 open(pname + "/settings.py", "w").write(outstr)
 
@@ -528,6 +537,10 @@ open(pname + "/__init__.py", "w").write("")
 
 #creat 1.cmd
 open("1.cmd", "w").write("cmd")
+
+
+#creat run.bat
+open("run.bat", "w").write("python manage.py runserver 0.0.0.0:8000")
 
 
 #modify manage
