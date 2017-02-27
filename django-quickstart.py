@@ -279,6 +279,8 @@ urlpatterns = [
     url(r'^login/$', login),
     url(r'^logout/$', logout),
     url(r'^password/$', password),
+
+    url(r'^output/$', output),
 ]
 
 
