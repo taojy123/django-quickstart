@@ -695,8 +695,7 @@ if not os.path.exists(os.path.join(os.getcwd(), 'static', 'css')):
     os.makedirs(os.path.join(os.getcwd(), 'static', 'css'))
 
 
-
-#modify manage
+#create uwsgi config
 outstr = """[uwsgi]
 chdir=./
 wsgi-file=./%s/wsgi.py
@@ -713,6 +712,13 @@ pidfile=/tmp/%s.pid
 """ % (pname, pname, pname)
 open("uwsgi_%s.ini" % pname, "w").write(outstr)
 
+
+#create requirement
+outstr = """django
+xlwt
+BeautifulSoup
+"""
+open("requirement.txt").write(outstr)
 
 
 print "Finish!"
