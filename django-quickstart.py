@@ -718,7 +718,7 @@ outstr = """django
 xlwt
 BeautifulSoup
 """
-open("requirement.txt").write(outstr)
+open("requirement.txt", "w").write(outstr)
 
 
 print "Finish!"
