@@ -324,33 +324,17 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if 'SERVER_SOFTWARE' in os.environ:
-    from sae.const import (
-        MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASS, MYSQL_DB
-        )
-    DATABASES = {
-        'default': {
-            'ENGINE':   'django.db.backends.mysql',
-            'NAME':     MYSQL_DB,
-            'USER':     MYSQL_USER,
-            'PASSWORD': MYSQL_PASS,
-            'HOST':     MYSQL_HOST,
-            'PORT':     MYSQL_PORT,
-            }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'data.db',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        # 'OPTIONS': {'charset': 'utf8mb4'}, # for emoji at mysql
     }
-
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': 'data.db',                      # Or path to database file if using sqlite3.
-            'USER': '',                      # Not used with sqlite3.
-            'PASSWORD': '',                  # Not used with sqlite3.
-            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-            # 'OPTIONS': {'charset': 'utf8mb4'}, # for emoji at mysql
-        }
-    }
+}
 
 SITE_ID = 1
 
