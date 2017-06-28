@@ -198,9 +198,11 @@ outstr = """
 from collections import OrderedDict
 
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.utils.text import capfirst
+
 
 from models import *
 
@@ -238,6 +240,19 @@ admin.site.unregister(Site)
 @admin.register(Reminder)
 class ReminderAdmin(admin.ModelAdmin):
     list_display = ['id', '__str__']
+
+
+@admin.register(LogEntry)
+class LogEntryAdmin(admin.ModelAdmin):
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    list_display = ['id', 'action_time', 'user', '__str__']
+    readonly_fields = ['action_time', 'user', 'content_type', 'object_id', 'object_repr', 'action_flag', 'change_message', 'objects']
 
 """
 open(pname + "/admin.py", "w").write(outstr)
