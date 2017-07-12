@@ -80,7 +80,7 @@ def login(request):
         password = request.POST.get('password', '')
         next_url = request.POST.get('next', '/')
         user = auth.authenticate(username=username, password=password)
-        print username, password
+        print(username, password)
         if user is not None and user.is_active:
             auth.login(request, user)
             return HttpResponseRedirect(next_url)
@@ -516,7 +516,7 @@ path = os.path.dirname(__file__)
 path = os.path.join(path, "..")
 #os.chdir(path)  # using web server for deploy to uncomment it
 sys.path.append(path)
-print os.getcwd()
+print(os.getcwd())
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "%s.settings")
 
@@ -671,7 +671,7 @@ if __name__ == "__main__":
         sys.argv.append("0.0.0.0:8000")
     else:
         webbrowser.open_new_tab('http://127.0.0.1:8000')
-    print sys.argv
+    print(sys.argv)
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
 
@@ -704,10 +704,9 @@ threads=2
 http-socket=0.0.0.0:8000
 daemonize=/var/log/uwsgi/%s.log
 pidfile=/tmp/%s.pid
-#stats=0.0.0.0:18000
-#virtualenv=/root/envdj16
 #socket=127.0.0.1:8000
-#http=0.0.0.0:8000
+#virtualenv=/root/envdj16
+#stats=0.0.0.0:18000
 """ % (pname, pname, pname)
 open("uwsgi_%s.ini" % pname, "w").write(outstr)
 
@@ -720,7 +719,7 @@ BeautifulSoup
 open("requirement.txt", "w").write(outstr)
 
 
-print "Finish!"
+print("Finish!")
 
 raw_input("Press any key to exit...")
 
