@@ -542,7 +542,12 @@ open("1.cmd", "w").write("cmd")
 
 
 #creat run.bat
-open("run.bat", "w").write("python manage.py runserver 0.0.0.0:8000")
+open("run.bat", "w").write("""
+set PATH=%PATH%;C:\Python27;C:\Python27\Scripts;
+pip install -r requirement.txt
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
+""")
 
 
 #modify manage
