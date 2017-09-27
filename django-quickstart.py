@@ -709,8 +709,9 @@ processes=2
 threads=2
 pidfile=/tmp/%s.pid
 daemonize=/var/log/%s.log
-http-socket=:80
-#https-socket=:443,/etc/letsencrypt/live/www.test.com/fullchain.pem,/etc/letsencrypt/live/www.test.com/privkey.pem
+http=:80
+#https=:443,/etc/letsencrypt/live/www.test.com/fullchain.pem,/etc/letsencrypt/live/www.test.com/privkey.pem
+#http-socket=:80
 #socket=127.0.0.1:8000
 #virtualenv=/root/envdj16
 #stats=0.0.0.0:18000
@@ -719,9 +720,10 @@ open("uwsgi_%s.ini" % pname, "w").write(outstr)
 
 
 #create requirement
-outstr = """django
-xlwt
-BeautifulSoup
+outstr = """django>=1.10
+uwsgi>=2.0.15
+xlwt>=1.3.0
+BeautifulSoup>=3.2.1
 """
 open("requirement.txt", "w").write(outstr)
 
