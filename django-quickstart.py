@@ -544,7 +544,7 @@ open("1.cmd", "w").write("cmd")
 #creat run.bat
 open("run.bat", "w").write("""
 set PATH=%PATH%;C:\Python27;C:\Python27\Scripts;
-pip install -r requirement.txt
+pip install -r requirements.txt
 python manage.py migrate
 explorer http://127.0.0.1:8000/
 python manage.py runserver 0.0.0.0:8000
@@ -719,13 +719,13 @@ http=:80
 open("uwsgi_%s.ini" % pname, "w").write(outstr)
 
 
-#create requirement
-outstr = """django>=1.10
+#create requirements
+outstr = """django==1.11.18
 uwsgi>=2.0.15
 xlwt>=1.3.0
 BeautifulSoup>=3.2.1
 """
-open("requirement.txt", "w").write(outstr)
+open("requirements.txt", "w").write(outstr)
 
 
 print("Finish!")
