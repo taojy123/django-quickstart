@@ -241,6 +241,8 @@ admin.site.unregister(Site)
 class ReminderAdmin(admin.ModelAdmin):
     list_display = ['id', '__str__']
 
+    def lookup_allowed(self, lookup, value):
+        return True
 
 @admin.register(LogEntry)
 class LogEntryAdmin(admin.ModelAdmin):
