@@ -1,7 +1,7 @@
 DJANGO QUICKSTART
 ==============
 
-在 Django 1.4+ 的基础上快速建立项目文件，当然是最基本的，不过这要比 django-admin.py 的 startproject 指令更好用。
+在 Django 1.4+ 的基础上快速建立项目文件，当然是最基本的，不过这要比 django-admin.py 的 startproject 指令更好用。(目前只支持 Python2.7)
 
 使用方法：
 
