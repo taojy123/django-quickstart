@@ -713,7 +713,7 @@ threads=2
 pidfile=/tmp/%s.pid
 daemonize=/var/log/%s.log
 http-socket=0.0.0.0:80
-#https=0.0.0.0:443,/etc/letsencrypt/live/www.test.com/fullchain.pem,/etc/letsencrypt/live/www.test.com/privkey.pem
+#https-socket=0.0.0.0:443,/etc/letsencrypt/live/www.test.com/fullchain.pem,/etc/letsencrypt/live/www.test.com/privkey.pem
 #http=0.0.0.0:80
 #socket=127.0.0.1:8000
 #virtualenv=/root/envdj16
@@ -723,7 +723,8 @@ open("uwsgi_%s.ini" % pname, "w").write(outstr)
 
 
 #create requirements
-outstr = """django==1.11.8
+outstr = """#Python2.7
+django==1.11.8
 uwsgi>=2.0.15
 xlwt>=1.3.0
 BeautifulSoup>=3.2.1
