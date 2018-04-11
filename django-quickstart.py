@@ -487,9 +487,10 @@ EMAIL_HOST = 'smtp.163.com'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = 'watchmen123456'
 EMAIL_HOST_PASSWORD = 'wm123456'
+EMAIL_SUBJECT_PREFIX = '[%s] '
 
 
-""" % (pname, str(uuid.uuid4()),pname, pname, pname)
+""" % (pname, str(uuid.uuid4()), pname, pname, pname, pname)
 open(pname + "/settings.py", "w").write(outstr)
 
 
