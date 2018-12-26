@@ -726,7 +726,7 @@ open("uwsgi_%s.ini" % pname, "w").write(outstr)
 
 #create requirements
 outstr = """#Python2.7
-django==1.11.8
+django>=1.11.15,<2
 uwsgi>=2.0.15
 xlwt>=1.3.0
 BeautifulSoup>=3.2.1
