@@ -19,8 +19,6 @@ outstr = """# -*- coding: utf-8 -*-
 
 import StringIO
 import HTMLParser
-import BeautifulSoup
-import xlwt
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -117,56 +115,6 @@ def password(request):
 
     return render_to_response('password.html', locals())
 
-
-def output(request):
-    data = request.POST.get('data')
-    begin_index = int(request.POST.get('begin_index', 0))
-    end_index = int(request.POST.get('end_index', 999))
-
-    html_parser = HTMLParser.HTMLParser()
-
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('output')
-
-    soup = BeautifulSoup.BeautifulSoup(data)
-
-    thead_soup = soup.find('thead')
-    th_soups = thead_soup.findAll(['th', 'td'])
-    th_soups = th_soups[begin_index:end_index]
-
-    j = 0
-    for th_soup in th_soups:
-        th = th_soup.getText()
-        th = html_parser.unescape(th).strip()
-        ws.write(0, j, th)
-        j += 1
-
-    tbody_soup = soup.find('tbody')
-    tr_soups = tbody_soup.findAll('tr')
-
-    i = 1
-    for tr_soup in tr_soups:
-        td_soups = tr_soup.findAll(['td', 'th'])
-        td_soups = td_soups[begin_index:end_index]
-
-        j = 0
-        for td_soup in td_soups:
-            td = td_soup.getText()
-            td = html_parser.unescape(td).strip()
-            ws.write(i, j, td)
-            j += 1
-
-        i += 1
-
-    s = StringIO.StringIO()
-    wb.save(s)
-    s.seek(0)
-    data = s.read()
-    response = HttpResponse(data)
-    response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment;filename="output.xls"'
-
-    return response
 """
 open(pname + "/views.py", "w").write(outstr)
 
@@ -297,7 +245,6 @@ urlpatterns = [
     url(r'^logout/$', logout),
     url(r'^password/$', password),
 
-    url(r'^output/$', output),
 ]
 
 
@@ -728,8 +675,6 @@ open("uwsgi_%s.ini" % pname, "w").write(outstr)
 outstr = """#Python2.7
 django>=1.11.15,<2
 uwsgi>=2.0.15
-xlwt>=1.3.0
-BeautifulSoup>=3.2.1
 """
 open("requirements.txt", "w").write(outstr)
 
